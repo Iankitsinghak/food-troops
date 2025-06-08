@@ -17,9 +17,18 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 })
 .then(() => console.log("MongoDB connected"))
-.catch((err) => console.error("MongoDB connection error:", err));
+.catch((err) => {
+  console.error("MongoDB connection error:", err.message);
+  process.exit(1);
+});
 
 app.use("/api/menu", menuRoutes);
 app.use("/api/orders", orderRoutes);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
