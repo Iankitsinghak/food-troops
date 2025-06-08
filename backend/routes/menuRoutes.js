@@ -1,44 +1,60 @@
 const express = require("express");
+const router = express.Router();
 const MenuItem = require("../models/MenuItem");
 
-const router = express.Router();
-
+// Get all menu items with optional filters and pagination
 router.get("/", async (req, res) => {
   try {
-    const items = await MenuItem.find();
-    res.json(items);
+    const { name, category, tags, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
+    const query = {};
+
+    if (name) query.name = { $regex: name, $options: "i" };
+    if (category) query.category = category;
+    if (tags) query.tags = { $in: tags.split(",") };
+    if (minPrice || maxPrice) query.price = {};
+    if (minPrice) query.price.$gte = Number(minPrice);
+    if (maxPrice) query.price.$lte = Number(maxPrice);
+
+    const menuItems = await MenuItem.find(query)
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    res.json(menuItems);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch menu items" });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
+// Add new menu item
 router.post("/", async (req, res) => {
   try {
-    const item = new MenuItem(req.body);
-    const saved = await item.save();
-    res.status(201).json(saved);
+    const newItem = new MenuItem(req.body);
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
   } catch (err) {
-    res.status(400).json({ error: "Invalid menu item data" });
+    res.status(400).json({ error: err.message });
   }
 });
 
+// Update menu item by id
 router.put("/:id", async (req, res) => {
   try {
-    const updated = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ error: "Menu item not found" });
-    res.json(updated);
+    const updatedItem = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedItem) return res.status(404).json({ error: "Menu item not found" });
+    res.json(updatedItem);
   } catch (err) {
-    res.status(400).json({ error: "Invalid update data" });
+    res.status(400).json({ error: err.message });
   }
 });
 
+// Delete menu item by id (soft delete by setting available: false)
 router.delete("/:id", async (req, res) => {
   try {
-    const deleted = await MenuItem.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "Menu item not found" });
-    res.json({ message: "Menu item deleted" });
+    const deletedItem = await MenuItem.findByIdAndUpdate(req.params.id, { available: false }, { new: true });
+    if (!deletedItem) return res.status(404).json({ error: "Menu item not found" });
+    res.json({ message: "Menu item marked unavailable" });
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete menu item" });
+    res.status(400).json({ error: err.message });
   }
 });
 
