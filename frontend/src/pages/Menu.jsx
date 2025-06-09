@@ -5,7 +5,7 @@ export default function Menu() {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    axios.get("https://foodtroop-backend.onrender.com/api/menus")
+    axios.get("https://foodtroop-backend.onrender.com/api/menu")
       .then(res => setMenu(res.data))
       .catch(err => console.error(err));
   }, []);
