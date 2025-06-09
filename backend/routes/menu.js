@@ -1,16 +1,34 @@
 import express from 'express';
+import Menu from '../models/Menu.js';
+
 const router = express.Router();
 
-// Example menu items
-const menuItems = [
-  { id: 1, name: "Chicken Biryani", price: 180 },
-  { id: 2, name: "Paneer Butter Masala", price: 150 },
-  { id: 3, name: "Tandoori Roti", price: 20 },
-];
+router.get('/', async (req, res) => {
+    try {
+        const menus = await Menu.find();
+        res.json(menus);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
-// GET /api/menu
-router.get('/', (req, res) => {
-  res.json(menuItems);
+router.post('/', async (req, res) => {
+    try {
+        const newMenu = new Menu(req.body);
+        await newMenu.save();
+        res.status(201).json(newMenu);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    try {
+        const updated = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updated);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
 });
 
 export default router;
