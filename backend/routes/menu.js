@@ -1,27 +1,16 @@
-
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const MenuItem = require('../models/MenuItem');
 
-router.get('/', async (req, res) => {
-    const items = await MenuItem.find();
-    res.json(items);
+// Example menu items
+const menuItems = [
+  { id: 1, name: "Chicken Biryani", price: 180 },
+  { id: 2, name: "Paneer Butter Masala", price: 150 },
+  { id: 3, name: "Tandoori Roti", price: 20 },
+];
+
+// GET /api/menu
+router.get('/', (req, res) => {
+  res.json(menuItems);
 });
 
-router.post('/', async (req, res) => {
-    const newItem = new MenuItem(req.body);
-    await newItem.save();
-    res.status(201).json(newItem);
-});
-
-router.put('/:id', async (req, res) => {
-    const updated = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updated);
-});
-
-router.delete('/:id', async (req, res) => {
-    await MenuItem.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Deleted' });
-});
-
-module.exports = router;
+export default router;
