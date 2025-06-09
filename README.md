@@ -1,21 +1,33 @@
+# 🍽️ FoodTroop - Restaurant Menu & Order Management System
 
-# FoodTroop 🍔
+Welcome to **FoodTroop**, a sleek, modern, and dark-themed full-stack application to manage restaurant menus and customer orders effortlessly.
 
-## Setup Instructions
+---
+
+## ✨ Features
+
+- Dynamic menu display with categories, ingredients, and availability  
+- Seamless order placement and status tracking  
+- RESTful API backend with MongoDB  
+- Dark mode theme for a modern UI experience  
+- Easy deployment on Vercel (frontend) and Render (backend)  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React.js  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB  
+- **Deployment:** Vercel (frontend), Render (backend)  
+
+---
+
+## ⚙️ Getting Started
 
 ### Backend
-1. Go to `backend` folder
-2. Run `npm install`
-3. Create a `.env` file from `.env.example`
-4. Run `npm start`
 
-### Frontend
-1. Go to `frontend` folder
-2. Run `npm install`
-3. Run `npm run dev`
-
-### Deployment
-- Frontend: Vercel
-- Backend: Render
-
-MongoDB is required. Use a free MongoDB Atlas account.
+```bash
+cd backend
+npm install
+npm run dev
