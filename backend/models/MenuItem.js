@@ -1,13 +1,12 @@
-
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const MenuItemSchema = new mongoose.Schema({
-    name: String,
-    category: String,
-    price: Number,
-    ingredients: [String],
-    tags: [String],
-    available: Boolean
+  name: String,
+  category: String,
+  price: Number,
+  ingredients: [String],
+  tags: [String],
+  available: Boolean
 });
 
-module.exports = mongoose.model('MenuItem', MenuItemSchema);
+export default mongoose.model('MenuItem', MenuItemSchema);
